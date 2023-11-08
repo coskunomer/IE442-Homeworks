@@ -16,7 +16,7 @@ stocks = [
     "PFE", "SBUX", "TGT", "LLY", "ASML", "NKE", "NVS", "PM", "ABT"
 ]
 
-stock = random.choice(stocks)
+stock = "AAPL"
 
 years = [str(year) for year in range(2005, date.today().year + 1)]
 months = [str(month).zfill(2) for month in range(1, 13)]
@@ -56,6 +56,7 @@ def plot_stock_prices(json_data, start_date, end_date):
     plt.show()
 
 def generate_plot():
+    stock_val = stock_var.get()
     start_year = year_start_var.get()
     start_month = month_start_var.get()
     start_day = day_start_var.get()
@@ -70,7 +71,7 @@ def generate_plot():
     end_date = datetime(int(end_year), int(end_month), int(end_day))
 
     # Call the Alpha Vantage API to fetch data
-    url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock}&outputsize=full&apikey={apiKey}'
+    url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_val}&outputsize=full&apikey={apiKey}'
     r = requests.get(url)
     data = r.json()
 
@@ -80,7 +81,7 @@ def generate_plot():
 # Create a larger Tkinter GUI
 root = tk.Tk()
 root.title("Stock Price Plot Generator")
-root.geometry("1000x350")
+root.geometry("1100x350")
 
 
 frame = ttk.Frame(root, padding="10")
@@ -138,12 +139,16 @@ day_end_label = ttk.Label(frame, text="Day:")
 day_end_label.grid(column=5, row=1, sticky=(tk.W, tk.E))
 day_end_combo.grid(column=6, row=1, sticky=(tk.W, tk.E))
 
+stock_var = tk.StringVar()
+stock_var.set(stock)
+stock_comb = ttk.Combobox(frame, textvariable=stock_var, values=stocks)
+stock_label = ttk.Label(frame, text="Stock:")
+stock_label.grid(column=0, row=3, sticky=(tk.W, tk.E))
+stock_comb.grid(column=1, row=3, sticky=(tk.W, tk.E))
+
 # Button to generate the plot
 generate_button = ttk.Button(frame, text="Generate Plot", command=generate_plot)
-generate_button.grid(column=0, row=3, columnspan=15)
+generate_button.grid(column=0, row=4, columnspan=15)
 
-
-day_end_combo = ttk.Label(frame, text=f"Selected stock: {stock}")
-day_end_combo.grid(column=0, row=5, columnspan=15)
 
 root.mainloop()
