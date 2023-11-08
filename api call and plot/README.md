@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ## 1. Run the Python script.
 
 ```
-python stock_price_plot_generator.py
+python main.py
 ```
 
 A GUI panel will open, allowing you to specify the start and end dates for the stock price data.
