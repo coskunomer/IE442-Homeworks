@@ -360,6 +360,19 @@ def main():
         # Create tables if not exists
         create_tables(cursor, num_periods)
 
+        # Fetch and display the 'parts' table
+        cursor.execute("SELECT * FROM parts")
+        parts_table = cursor.fetchall()
+        st.subheader("Table: parts")
+        st.table(pd.DataFrame(parts_table,
+                              columns=["partID", "part_name", "lead_time", "inventory", "lot_size", "BOM_level"]))
+
+        # Fetch and display the 'bom' table
+        cursor.execute("SELECT * FROM bom")
+        bom_table = cursor.fetchall()
+        st.subheader("Table: bom")
+        st.table(pd.DataFrame(bom_table, columns=["partID", "component_partID", "multiplier"]))
+
         # Prepare demands list for insertion
         demands_list = [(1, i, demand) for i, demand in enumerate(demands, start=1)]
 
