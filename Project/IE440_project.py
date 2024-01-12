@@ -175,7 +175,7 @@ def update_gross_requirements(cursor):
             SET
                 net_requirements = CASE
                     WHEN net_requirements > 0
-                    THEN CEIL(net_requirements / (SELECT lot_size FROM parts WHERE parts.partID = mrp.partID)) * (SELECT lot_size FROM parts WHERE parts.partID = mrp.partID)
+                    THEN CEILING(net_requirements / (SELECT lot_size FROM parts WHERE parts.partID = mrp.partID)) * (SELECT lot_size FROM parts WHERE parts.partID = mrp.partID)
                     ELSE 0
                 END
             WHERE EXISTS (SELECT 1 FROM demands WHERE demands.partID = mrp.partID AND demands.periodID = mrp.periodID);
@@ -279,7 +279,7 @@ def update_children(cursor, parentID):
         cursor.execute('''
             UPDATE mrp
             SET planned_order_release = (
-                SELECT CEIL(COALESCE(net_requirements, 0) / parts.lot_size) * parts.lot_size
+                SELECT CEILING(COALESCE(net_requirements, 0) / parts.lot_size) * parts.lot_size
                 FROM mrp AS mrp_prev
                 JOIN parts ON mrp_prev.partID = parts.partID
                 WHERE mrp_prev.partID = mrp.partID AND mrp_prev.periodID = mrp.periodID + (SELECT lead_time FROM parts WHERE partID = mrp.partID)
